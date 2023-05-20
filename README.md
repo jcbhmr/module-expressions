@@ -3,12 +3,12 @@ https://github.com/tc39/proposal-module-expressions
 ```js
 const mod = module(import.meta, async () => {
   const message = await import("./message.js");
-  
-	function main(s) {
+
+  function main(s) {
     console.log(message, s)
-		return import.meta.url;
-	}
-  
+    return import.meta.url;
+  }
+
   return { main }
 })
 // BECOMES
@@ -16,7 +16,7 @@ const mod = "data:text/javascript;base64," + btoa(`
   const __import_meta = { url: "about:blank", __id: 1 }
   // id increments on each call so that module() over and over is different each time,
   // even if same function https://github.com/tc39/proposal-module-expressions/issues/45
-  
+
   async function __import(specifier) {
     let resolved;
     if (specifier.startsWith("./") || specifier.startsWith("../") || specifier.startsWith("/")) {
@@ -26,7 +26,7 @@ const mod = "data:text/javascript;base64," + btoa(`
     }
     return await import(resolved)
   }
-  
+
   const exports = await (async () => {
     const message = await __import("./message.js");
 
@@ -37,7 +37,7 @@ const mod = "data:text/javascript;base64," + btoa(`
 
     return { main }
   })()
-  
+
   export function then(resolve) {
     resolve?.(exports)
   }
