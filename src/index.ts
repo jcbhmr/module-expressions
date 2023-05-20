@@ -1,45 +1,27 @@
-export default function module(
+import templateCode from "./template.js?raw";
+
+let nextId = 1;
+function module(
   importMeta: ImportMeta,
   bodyBlock: () => PromiseLike<any> | any
 ): string {
-  let bodyBlockCode = `${bodyBlock}`;
-  bodyBlockCode = bodyBlockCode.replaceAll("import(", "__import(");
+  const bodyBlockCode = `${bodyBlock}`;
+  const id = nextId;
+  nextId++;
 
-  const moduleCode = `
-    // ${Math.random()}
-    const import_meta_resolve$ = import.meta.resolve;
-    Object.assign(import.meta, {
-      url: ${JSON.stringify(importMeta.url)},
-      resolve(specifier) {
-        if (
-          specifier.startsWith("./") ||
-          specifier.startsWith("../") ||
-          specifier.startsWith("/")
-        ) {
-          return new URL(specifier, ${JSON.stringify(importMeta.url)}).href;
-        } else {
-          return import_meta_resolve$.call(this, ...arguments);
-        }
-      },
-    });
+  let b = bodyBlockCode;
+  b = b.replaceAll("import(", "__import(");
 
-    async function __import(specifier) {
+  globalThis.__moduleResolvers ??= {};
+  __moduleResolvers[id] = importMeta.resolve;
 
-    }
+  // MODULE_ID
+  // IMPORT_META_URL
+  // PROCESSED_BODY_BLOCK_CODE
+  let m = templateCode;
+  m = m.replaceAll("MODULE_ID", JSON.stringify(id));
+  m = m.replaceAll("IMPORT_META_URL", JSON.stringify(importMeta.url));
+  m = m.replaceAll("PROCESSED_BODY_BLOCK_CODE", b);
 
-    let exports = await (${bodyBlockCode})()
-    exports ??= {}
-    if (typeof exports !== "object") {
-      exports = { default: exports }
-    }
-
-    function then(r) {
-      r(exports);
-    }
-
-    export { then };
-  `;
-
-  const blob = new Blob([moduleCode], { type: "text/javascript" });
-  return URL.createObjectURL(blob);
+  return URL.createObjectURL(new Blob([m], { type: "text/javascript" }));
 }

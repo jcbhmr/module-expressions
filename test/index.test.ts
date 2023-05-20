@@ -33,7 +33,7 @@ test("can import things", async () => {
 
 test("can import local files", async () => {
   const mod = module(import.meta, async () => {
-    const {} = await import("./fixtures/module.js");
+    const {} = await import("./x.js");
   });
   const n = await import(mod);
   expect(n).toBeDefined();
@@ -45,7 +45,5 @@ test("import.meta is correct", async () => {
   });
   const { default: importMeta } = await import(mod);
   expect(importMeta.url).toBe(import.meta.url);
-  expect(importMeta.resolve("./fixtures/module.js")).toBe(
-    import.meta.resolve("./fixtures/module.js")
-  );
+  expect(importMeta.resolve("./x.js")).toBe(import.meta.resolve("./x.js"));
 });
