@@ -1,10 +1,45 @@
-import { createModule, Module } from "./Module";
+export default function module(
+  importMeta: ImportMeta,
+  bodyBlock: () => PromiseLike<any> | any
+): string {
+  let bodyBlockCode = `${bodyBlock}`;
+  bodyBlockCode = bodyBlockCode.replaceAll("import(", "__import(");
 
-function module(
-  importMeta: ImportMeta
-): (strings: TemplateStringsArray) => Module {
-  return (strings: TemplateStringsArray): Module =>
-    createModule(importMeta, strings[0]);
+  const moduleCode = `
+    // ${Math.random()}
+    const import_meta_resolve$ = import.meta.resolve;
+    Object.assign(import.meta, {
+      url: ${JSON.stringify(importMeta.url)},
+      resolve(specifier) {
+        if (
+          specifier.startsWith("./") ||
+          specifier.startsWith("../") ||
+          specifier.startsWith("/")
+        ) {
+          return new URL(specifier, ${JSON.stringify(importMeta.url)}).href;
+        } else {
+          return import_meta_resolve$.call(this, ...arguments);
+        }
+      },
+    });
+
+    async function __import(specifier) {
+
+    }
+
+    let exports = await (${bodyBlockCode})()
+    exports ??= {}
+    if (typeof exports !== "object") {
+      exports = { default: exports }
+    }
+
+    function then(r) {
+      r(exports);
+    }
+
+    export { then };
+  `;
+
+  const blob = new Blob([moduleCode], { type: "text/javascript" });
+  return URL.createObjectURL(blob);
 }
-
-export { module, Module };
