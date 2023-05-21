@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<script type="importmap">
+  {
+    "imports": {
+      "htm": "https://esm.sh/htm",
+      "htm/": "https://esm.sh/htm/",
+      "preact": "https://esm.sh/preact",
+      "preact/": "https://esm.sh/preact/"
+    }
+  }
+</script>
+<script type="module">
+  import module from "./index.js";
+
+  const mod1 = module(import.meta, async () => {
+    const { html, render } = await import("htm/preact");
+    const App = () => html`<p>Hello preact!</p>`;
+    render(html`<${App} />`, root);
+  });
+
+  await import(mod1);
+
+  import greenlet from "./new-greenlet.js";
+
+  const f1 = greenlet(
+    module(import.meta, async () => {
+      return () => 34;
+    })
+  );
+
+  log.append(`from new greenlet() ${await f1()}\n`);
+</script>
+<div id="root"></div>
+<pre id="log"></pre>

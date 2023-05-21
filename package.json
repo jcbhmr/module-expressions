@@ -1,0 +1,10 @@
+{
+  "name": "module-expressions-idea",
+  "version": "1.0.0",
+  "description": "https://github.com/tc39/proposal-module-expressions",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js"
+}
