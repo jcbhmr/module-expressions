@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "typedocOptions": {
+    "entryPoints": ["src/index.ts"],
+    "out": "docs/dist",
+    "skipErrorChecking": true
+  }
+}

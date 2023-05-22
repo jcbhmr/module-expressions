@@ -6,6 +6,8 @@
 export default function module(importMeta, bodyBlock) {
   let b = `${bodyBlock}`;
   b = b.replaceAll("import(", "__import(");
+  b = b.replaceAll("__vite_ssr_dynamic_import__(", "__import(");
+  b = b.replaceAll("__vite_ssr_import_meta__", "import.meta");
 
   globalThis.__resolvers ??= [];
   __resolvers.push(importMeta.resolve);
