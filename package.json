@@ -6,10 +6,16 @@
   "license": "MIT",
   "author": "",
   "type": "module",
-  "main": "index.js",
-  "exports": {
-    ".": "./index.js",
-    "./polyfill": "./index.js"
+  "exports": "./dist/index.js",
+  "workspaces": [
+    "docs/playground",
+    "test/e2e/*"
+  ],
+  "scripts": {
+    "prepack": "vite build",
+    "start": "vitest",
+    "pretest": "prettier --ignore-path .gitignore -w .",
+    "test": "tsc --noEmit && vitest run"
   },
   "devDependencies": {
     "prettier": "^2.8.8",
@@ -24,11 +30,5 @@
     "vite-plugin-run": "^0.4.1",
     "vite-plugin-virtual": "^0.2.0",
     "vitest": "^0.31.1"
-  },
-  "scripts": {
-    "prepack": "vite build",
-    "test": "tsc --noEmit && vitest run",
-    "start": "vitest",
-    "pretest": "prettier --ignore-path .gitignore -w ."
   }
 }

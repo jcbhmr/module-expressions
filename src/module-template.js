@@ -104,11 +104,9 @@
   };
 }
 
-// This is another one that isn't renamed because there's no way to declare it
-// in a {} block but assign it in the main scope. 🤷‍♀️
 /** @type {object} */
 // @ts-ignore
-var __exports = await (0, TEMPLATE_BODY)();
+var __exports = await TEMPLATE_BODY();
 
 {
   /** @type {object} */
@@ -130,4 +128,7 @@ var __exports = await (0, TEMPLATE_BODY)();
   var __then = (handleResolve) => handleResolve(exports);
 }
 
-export { __then as then };
+// This defines a .then() function on the module namespace object that gets
+// returned by calls to import(). Thus, we can tap into the object that we want
+// to return to our caller! We also export the stuff directly too just in case.
+export { __then as then, __exports };

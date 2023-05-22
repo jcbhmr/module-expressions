@@ -1,10 +1,12 @@
-import module from "@jcbhmr/module-expressions/polyfill";
+import module from "@jcbhmr/module-expressions";
 
+const log = document.getElementById("log")! as HTMLPreElement;
 const mod = module(import.meta, async () => {
   const { default: isOdd } = await import("is-odd");
   const { default: hello } = await import("./hello");
 
-  document.body.append(hello("world") + "\n");
-  document.body.append(isOdd(1) + "\n");
+  log.append(hello("world") + "\n");
+  log.append(isOdd(1) + "\n");
 });
-import(/* @vite-ignore */ mod);
+// No top-level await in default Vite target
+import(mod);

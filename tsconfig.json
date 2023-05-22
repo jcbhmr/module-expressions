@@ -9,8 +9,10 @@
     "esModuleInterop": true,
     "strict": true
   },
+  "include": ["src", "test", "*.ts"],
+  "exclude": ["node_modules", "dist", "docs", "test/e2e"],
   "typedocOptions": {
-    "entryPoints": ["src/index.ts"],
+    "entryPoints": ["src/index.ts", "src/polyfill.ts"],
     "out": "docs/dist",
     "skipErrorChecking": true
   }

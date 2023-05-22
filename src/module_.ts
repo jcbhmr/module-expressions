@@ -78,10 +78,10 @@ const fr = new FinalizationRegistry((id: string) => delete __resolvers[id]);
  * @see https://github.com/tc39/proposal-module-expressions
  * @see https://github.com/jcbhmr/module-expressions#readme
  */
-export default function module(
+export default function module<T = any>(
   importMeta: ImportMeta,
-  bodyBlock: () => PromiseLike<any> | any
-): Module {
+  bodyBlock: () => PromiseLike<T> | T
+): Module<T extends { __esModule: true } ? T : { default: T }> {
   if (!importMeta?.url) {
     throw new DOMException(
       "import.meta.url is not available",
@@ -121,12 +121,14 @@ export default function module(
   let m = moduleTemplate;
   m = m.replaceAll("TEMPLATE_URL", importMeta.url);
   m = m.replaceAll("TEMPLATE_ID", id);
-  m = m.replaceAll("TEMPLATE_BODY", b);
+  m = m.replaceAll("TEMPLATE_BODY", `(${b})`);
 
   const moduleBodyCode = m;
   const dataURL = "data:text/javascript," + encodeURIComponent(moduleBodyCode);
 
-  const module = createModule(`(${bodyBlockCode})()`, dataURL);
+  const module = createModule<
+    T extends { __esModule: true } ? T : { default: T }
+  >(`(${bodyBlockCode})()`, dataURL);
   fr.register(module, id);
 
   return module;

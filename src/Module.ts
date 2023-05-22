@@ -20,10 +20,25 @@
  *   //=> "hello world"
  */
 
-const sourceText = new WeakMap<Module, string>();
-const dataURL = new WeakMap<Module, string>();
-function createModule(sourceText_: string, dataURL_: string): Module {
-  const module = new String(dataURL_) as unknown as Module;
+declare global {
+  // @ts-ignore
+  var Worker: {
+    new (scriptURL: string | URL, options?: WorkerOptions): Worker;
+    new <T extends {}>(
+      scriptURL: Module<T>,
+      options: WorkerOptions & { type: "module" }
+    ): Worker;
+    prototype: Worker;
+  };
+}
+
+const sourceText = new WeakMap<Module<{}>, string>();
+const dataURL = new WeakMap<Module<{}>, string>();
+function createModule<T extends {}>(
+  sourceText_: string,
+  dataURL_: string
+): Module<T> {
+  const module = new String(dataURL_) as unknown as Module<T>;
   Object.setPrototypeOf(module, Module.prototype);
 
   sourceText.set(module, sourceText_);
@@ -31,7 +46,7 @@ function createModule(sourceText_: string, dataURL_: string): Module {
 
   return module;
 }
-class Module {
+class Module<T extends {}> {
   private constructor() {}
 
   [Symbol.toPrimitive](hint: "default" | "number" | "string") {
