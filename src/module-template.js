@@ -44,6 +44,9 @@
   /** @type {string} */
   // @ts-ignore
   const url = TEMPLATE_URL;
+  /** @type {string} */
+  // @ts-ignore
+  const viteRoot = TEMPLATE_VITE_ROOT;
 
   import.meta.url = url;
 
@@ -58,9 +61,9 @@
       specifier = `${specifier}`;
 
       // @ts-ignore
-      if (typeof __resolvers !== "undefined" && id in __resolvers) {
+      if (typeof __resolvers !== "undefined" && url in __resolvers) {
         // @ts-ignore
-        return __resolvers[id](specifier);
+        return __resolvers[url](specifier);
       } else if (
         specifier.startsWith("./") ||
         specifier.startsWith("../") ||
@@ -86,9 +89,9 @@
     specifier = `${specifier}`;
 
     // @ts-ignore
-    if (typeof __resolvers !== "undefined" && id in __resolvers) {
+    if (typeof __resolvers !== "undefined" && url in __resolvers) {
       // @ts-ignore
-      return __resolvers[id](specifier);
+      return import(__resolvers[url](specifier));
     } else if (
       specifier.startsWith("./") ||
       specifier.startsWith("../") ||
@@ -102,6 +105,20 @@
       return import(specifier);
     }
   };
+
+  /**
+   * @param {string} specifier
+   * @returns {Promise<object>}
+   */
+  var __viteImport = (specifier) => {
+    specifier = `${specifier}`;
+
+    if (specifier.startsWith("/")) {
+      return import(viteRoot + specifier);
+    } else {
+      return __import(specifier);
+    }
+  };
 }
 
 /** @type {object} */
@@ -110,14 +127,11 @@ var __exports = await TEMPLATE_BODY();
 
 {
   /** @type {object} */
-  let exports;
-  if (__exports?.[Symbol.toStringTag] === "Module") {
-    exports = __exports;
-  } else if (__exports?.__esModule) {
-    exports = __exports;
-  } else {
-    exports = { __esModule: true, default: __exports };
-  }
+  const exports =
+    __exports?.__esModule ||
+    Object.prototype.toString.call(__exports).slice(8, -1) === "Module"
+      ? __exports
+      : { ...__exports, __esModule: true, default: __exports };
 
   // This needs to be var so that it escapes the {} block scope. We also keep
   // the __then name so that it doesn't get renamed to a "a", "b", etc. short

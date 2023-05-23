@@ -65,5 +65,8 @@ class Module<T extends {}> {
   }
 }
 
+// https://stackoverflow.com/a/50924506
+type ModuleExports<T> = T extends Module<infer X> ? X : never;
+
 export default Module;
-export { createModule };
+export { createModule, ModuleExports };

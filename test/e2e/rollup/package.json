@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@jcbhmr/module-expressions": "file:../../.."
+  }
+}

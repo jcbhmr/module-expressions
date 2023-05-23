@@ -1,15 +1,27 @@
-import assert from "node:assert"
-import { test } from "node:test"
-import module  from  "../src/index"
+import { test, expect, assert } from "vitest";
+import "../src/polyfill";
+import "whatwg-worker";
+import { pEvent } from "p-event";
 
-test("works", async () => {
-  const mod = module(import.meta, async () => {
-    const { inspect } = await import("node:util")
-    const { default: isOdd } = await import("is-odd")
-    const { default: hello } = await import("./hello")
+test("new Worker() works", async () => {
+  const mod = module(import.meta, () => {});
+  const worker = new Worker(mod, { type: "module" });
+});
 
-    console.log(hello("world"))
-    console.log(isOdd(1))
-  })
-  await import(mod)
-})
+test("able to pass Module to .postMessage()", async () => {
+  const mod = module(import.meta, () => {});
+  const worker = new Worker(mod, { type: "module" });
+  worker.postMessage(mod);
+});
+
+test("it's as close as possible to a Module in the worker", async () => {
+  const mod = module(import.meta, () => {
+    onmessage = ({ data }) => postMessage(data);
+  });
+  const worker = new Worker(mod, { type: "module" });
+  const p = pEvent(worker, "message");
+  worker.postMessage(mod);
+  const { data } = await p;
+  console.log(data);
+  expect(data).toBeTypeOf("string");
+});

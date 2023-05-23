@@ -1,3 +1,10 @@
+/**
+ * This file is named "module_.ts" to avoid conflicts on case-insensitive file
+ * systems with the "Module.ts" file.
+ *
+ * @file
+ */
+
 // The virtual:module-template is a virtual module that contains the template
 // for the module function as a string. It's the contents of module-template.js
 // minified and exported as a string. We use Terser to minify the code in the
@@ -8,7 +15,7 @@ import Module, { createModule } from "./Module";
 
 declare var moduleTemplate: string;
 declare global {
-  var __resolvers: Record<string, (specifier: string) => string>;
+  var __resolvers: Record<string, (specifier: string) => string> | undefined;
 }
 
 /**
@@ -23,7 +30,11 @@ declare global {
  * it's just _nice to have_. If it's not there, we fall back to the local
  * `import.meta.resolve()` function.
  */
-const fr = new FinalizationRegistry((id: string) => delete __resolvers[id]);
+const fr = new FinalizationRegistry((url: string) => {
+  if (typeof __resolvers !== "undefined" && url in __resolvers) {
+    delete __resolvers[url];
+  }
+});
 
 /**
  * 🛑 This is a sham! It's not a real API that is standard. This is something to
@@ -113,15 +124,25 @@ export default function module<T = any>(
     console.warn("eager glob import");
   }
 
-  const id = `${Math.random()}`;
   if (importMeta.resolve) {
-    __resolvers[id] = importMeta.resolve as unknown as (s: string) => string;
+    globalThis.__resolvers ??= {};
+    __resolvers![importMeta.url] = importMeta.resolve as unknown as (
+      specifier: string
+    ) => string;
+  }
+
+  let viteRoot: string | undefined;
+  // @ts-ignore
+  if (typeof __vite_worker__ !== "undefined") {
+    // @ts-ignore
+    viteRoot = __vite_worker__.config.root;
   }
 
   let m = moduleTemplate;
-  m = m.replaceAll("TEMPLATE_URL", importMeta.url);
-  m = m.replaceAll("TEMPLATE_ID", id);
+  m = m.replaceAll("TEMPLATE_URL", JSON.stringify(importMeta.url));
+  m = m.replaceAll("TEMPLATE_ID", JSON.stringify(`${Math.random()}`));
   m = m.replaceAll("TEMPLATE_BODY", `(${b})`);
+  m = m.replaceAll("TEMPLATE_VITE_ROOT", JSON.stringify(viteRoot));
 
   const moduleBodyCode = m;
   const dataURL = "data:text/javascript," + encodeURIComponent(moduleBodyCode);
@@ -129,7 +150,7 @@ export default function module<T = any>(
   const module = createModule<
     T extends { __esModule: true } ? T : { default: T }
   >(`(${bodyBlockCode})()`, dataURL);
-  fr.register(module, id);
+  fr.register(module, importMeta.url);
 
   return module;
 }

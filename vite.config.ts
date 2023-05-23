@@ -6,18 +6,29 @@ import noBundle from "vite-plugin-no-bundle";
 // @ts-ignore
 import virtual from "vite-plugin-virtual/dist/index.mjs";
 
-export default defineConfig(async () => {
-  const raw = await readFile("src/module-template.js", "utf8");
+async function f(file: string): Promise<string> {
+  const raw = await readFile(file, "utf8");
   const minified = await minify(raw, {
     module: true,
     compress: {
       unused: false,
     },
     mangle: {
-      reserved: ["__import", "__exports", "__then"],
+      reserved: ["__import", "__viteImport", "__exports", "__then"],
     },
   });
-  const text = `export default ${JSON.stringify(minified.code)}`;
+  return `export default ${JSON.stringify(minified.code!)}`;
+}
+
+export default defineConfig(async () => {
+  const virtualModules = {
+    "virtual:module-template": await f("src/module-template.js"),
+    "virtual:module-template-vite": await f("src/module-template-vite.js"),
+    "virtual:module-template-vitest": await f("src/module-template-vitest.js"),
+    "virtual:module-template-webpack": await f(
+      "src/module-template-webpack.js"
+    ),
+  } as const;
 
   return {
     build: {
@@ -27,6 +38,6 @@ export default defineConfig(async () => {
         fileName: "index",
       },
     },
-    plugins: [noBundle(), virtual({ "virtual:module-template": text }), dts()],
+    plugins: [noBundle(), virtual(virtualModules), dts()],
   };
 });
