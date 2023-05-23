@@ -2,7 +2,13 @@
 
 # Contextual ESM `data:` URLs
 
-🧙‍♂️ `import.meta` + async function = contextual ESM `data:` URLs
+🧙‍♂️ `import.meta` + `async () => {}` = contextual ESM `data:` URLs
+
+<div align="center">
+
+![](https://picsum.photos/600/400)
+
+</div>
 
 🎉 Create `data:` URLs that are true ESM code from an `async () => {}` block \
 🏠 Contextualizes `import()` calls in the body to the provided `import.meta` \
