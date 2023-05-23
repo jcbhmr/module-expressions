@@ -14,21 +14,15 @@ async function f(file: string): Promise<string> {
       unused: false,
     },
     mangle: {
-      reserved: ["__import", "__viteImport", "__exports", "__then"],
+      reserved: ["__import", "__viteSSRImport", "__exports", "__then"],
     },
   });
   return `export default ${JSON.stringify(minified.code!)}`;
 }
 
 export default defineConfig(async () => {
-  const virtualModules = {
-    "virtual:module-template": await f("src/module-template.js"),
-    "virtual:module-template-vite": await f("src/module-template-vite.js"),
-    "virtual:module-template-vitest": await f("src/module-template-vitest.js"),
-    "virtual:module-template-webpack": await f(
-      "src/module-template-webpack.js"
-    ),
-  } as const;
+  for (const n of ["module-template-vite.js", "module-template-vitest.js"])
+  await $`terser src/internal/${}`
 
   return {
     build: {
