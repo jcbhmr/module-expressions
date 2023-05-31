@@ -6,29 +6,30 @@
   "license": "MIT",
   "author": "",
   "type": "module",
+  "imports": {
+    "#/moduleTemplate.txt.js": {
+      "bun": "./dist/moduleTemplate.txt.js",
+      "deno": "./dist/moduleTemplate.txt.js",
+      "node": "./dist/moduleTemplate-node.txt.js",
+      "browser": "./dist/moduleTemplate-browser.txt.js",
+      "default": "./dist/moduleTemplate.txt.js"
+    }
+  },
   "exports": "./dist/index.js",
-  "workspaces": [
-    "docs/playground",
-    "test/e2e/*"
-  ],
   "scripts": {
-    "prepack": "vite build",
-    "start": "vitest",
+    "prepack": "./prebuild.ts && tsc",
+    "start": "tsx --test --watch **/*.test.ts",
     "pretest": "prettier --ignore-path .gitignore -w .",
-    "test": "tsc --noEmit && vitest run"
+    "test": "./prebuild.ts && tsc --noEmit && tsx --test **/*.test.ts"
   },
   "devDependencies": {
+    "@types/node": "^20.2.5",
+    "import-meta-resolve": "^3.0.0",
     "prettier": "^2.8.8",
     "prettier-plugin-jsdoc": "^0.4.2",
     "prettier-plugin-packagejson": "^2.4.3",
     "terser": "^5.17.4",
     "typedoc": "^0.24.7",
-    "typescript": "^5.0.4",
-    "vite": "^4.3.8",
-    "vite-plugin-dts": "^2.3.0",
-    "vite-plugin-no-bundle": "^2.0.2",
-    "vite-plugin-run": "^0.4.1",
-    "vite-plugin-virtual": "^0.2.0",
-    "vitest": "^0.31.1"
+    "typescript": "^5.0.4"
   }
 }

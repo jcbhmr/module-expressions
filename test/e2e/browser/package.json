@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@jcbhmr/module-expressions": "file:../../.."
-  },
-  "bundleDependencies": true
-}
