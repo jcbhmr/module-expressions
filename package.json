@@ -7,11 +7,10 @@
   "author": "",
   "type": "module",
   "imports": {
-    "#/moduleTemplate.txt.js": {
+    "#import-meta-url": {
       "bun": "./dist/moduleTemplate.txt.js",
       "deno": "./dist/moduleTemplate.txt.js",
       "node": "./dist/moduleTemplate-node.txt.js",
-      "browser": "./dist/moduleTemplate-browser.txt.js",
       "default": "./dist/moduleTemplate.txt.js"
     }
   },
@@ -25,6 +24,7 @@
   "devDependencies": {
     "@types/node": "^20.2.5",
     "import-meta-resolve": "^3.0.0",
+    "is-odd": "^3.0.1",
     "prettier": "^2.8.8",
     "prettier-plugin-jsdoc": "^0.4.2",
     "prettier-plugin-packagejson": "^2.4.3",
