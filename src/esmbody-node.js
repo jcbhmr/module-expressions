@@ -9,20 +9,12 @@ export default function esmbody(importMeta, function_) {
   const id = Math.random().toString(36).slice(2, 6);
   const resolveShimURL = new URL("internal/resolve-shim.js", import.meta.url);
 
+  // @ts-ignore
   globalThis.__originalResolveMap__ ??= new Map();
+  // @ts-ignore
   __originalResolveMap__.set(id, importMeta.resolve);
 
   let f = `${function_}`;
-
-  const r = ($0, $1, $2, $3) => {
-    const specifier = JSON.parse($2.replaceAll("'", '"'));
-    const resolved = importMeta.resolve(specifier, url);
-    return $1 + JSON.stringify(resolved) + $3;
-  };
-  f = f.replaceAll(/(\Wimport\s[\s\S]*?from\s+)(['"].*?['"])(\W)/g, r);
-  f = f.replaceAll(/(\Wimport\s+)(['"].*?['"])(\W)/g, r);
-  f = f.replaceAll(/(\Wexport\s[\s\S]*?from\s+)(['"].*?['"])(\W)/g, r);
-
   f = f.replaceAll(/(\W)import\(/g, "$1__import__(");
   f = f.replace(/(\W)import\.meta(\W)/g, "$1__importMeta__$2");
 

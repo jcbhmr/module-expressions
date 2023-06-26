@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "declaration": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
@@ -10,13 +11,11 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "#/esmbody.js": ["./src/esmbody-node.js"]
+    }
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist"],
-  "typedocOptions": {
-    "entryPoints": ["src/*.ts"],
-    "out": "docs/dist",
-    "skipErrorChecking": true
-  }
+  "exclude": ["node_modules", "dist"]
 }

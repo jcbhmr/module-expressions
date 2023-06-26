@@ -1,39 +1,54 @@
 {
-  "name": "module-expressions-idea",
+  "name": "@jcbhmr/esmurl",
   "version": "1.0.0",
-  "description": "https://github.com/tc39/proposal-module-expressions",
-  "keywords": [],
+  "description": "🎁 Create a self-contained ESM blob: URL using a function & local import.meta",
+  "keywords": [
+    "nodejs",
+    "javascript",
+    "serialization",
+    "esm",
+    "import-meta",
+    "js-functions",
+    "importmaps"
+  ],
   "license": "MIT",
-  "author": "",
+  "author": "Jacob Hummer <jcbhmr@outlook.com> (https://jcbhmr.me/)",
   "type": "module",
   "imports": {
-    "#/internal/createContentURL.js": {
-      "deno": "./src/internal/createContentURL.js",
-      "node": "./src/internal/createContentURL-node.js",
-      "default": "./src/internal/createContentURL.js"
-    },
-    "#/internal/getResolve.js": {
-      "deno": "./src/internal/getResolve.js",
-      "node": "./src/internal/getResolve-node.js",
-      "default": "./src/internal/getResolve.js"
+    "#/esmbody.js": {
+      "deno": null,
+      "bun": null,
+      "node": "./src/esmbody-node.js"
     }
   },
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": {
+      "node": "./src/index-node.js",
+      "default": "./src/index.js"
+    },
+    "./esmbody.js": {
+      "deno": null,
+      "bun": null,
+      "node": "./src/esmbody-node.js"
+    },
+    "./*.js": "./src/*.js",
+    "./internal/*": null
+  },
   "scripts": {
-    "prepack": "./prebuild.ts && tsc",
-    "start": "tsx --test --watch **/*.test.ts",
-    "pretest": "prettier --ignore-path .gitignore -w .",
-    "test": "./prebuild.ts && tsc --noEmit && tsx --test **/*.test.ts"
+    "build": "node prebuild.js",
+    "lint": "prettier --ignore-path .gitignore -w .",
+    "start": "node --test --watch test/*.test.js",
+    "test": "node prebuild.js && tsc --noEmit && node --test test/*.test.js"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
     "import-meta-resolve": "^3.0.0",
     "is-odd": "^3.0.1",
+    "jsdoc": "^4.0.2",
     "prettier": "^2.8.8",
     "prettier-plugin-jsdoc": "^0.4.2",
     "prettier-plugin-packagejson": "^2.4.3",
     "terser": "^5.17.4",
-    "typedoc": "^0.24.7",
     "typescript": "^5.0.4"
   }
 }

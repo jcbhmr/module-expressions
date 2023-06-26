@@ -1,9 +1,9 @@
+// @ts-nocheck
 {
   const moduleId = TEMPLATE_MODULE_ID;
   const moduleURL = TEMPLATE_MODULE_URL;
   const resolveShimURL = TEMPLATE_RESOLVE_SHIM_URL;
 
-  /** @type {(specifier: string, parentURL?: string) => string} */
   let resolve;
   if (globalThis.__originalResolversMap__?.has(moduleId)) {
     resolve = __originalResolversMap__.get(moduleId);
@@ -16,15 +16,9 @@
       resolveShim(specifier, parentURL);
   }
 
-  async function importHook(specifier, options = undefined) {
-    return await import(resolve(specifier), options);
-  }
+  var __import__ = async (specifier, options = undefined) =>
+    import(resolve(specifier), options);
 
-  /** @type {(specifier: string, options?: ImportCallOptions) => object} */
-  var __import__ = importHook;
-
-  /** @type {ImportMeta} */
-  /** @type {ImportMeta} */
   var __importMeta__ = Object.create(null);
   __importMeta__.url = moduleURL;
   if ("resolve" in import.meta) {

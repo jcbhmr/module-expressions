@@ -2,10 +2,7 @@
 import fsPromises from "node:fs/promises";
 import { minify } from "terser";
 
-for (const templateFile of [
-  "src/internal/template-node.js",
-  "src/internal/template-browser.js",
-]) {
+for (const templateFile of ["src/internal/template-node.js"]) {
   const outFile = templateFile.replace(/\.js$/, ".txt.js");
   const templateText = await fsPromises.readFile(templateFile, "utf8");
 

@@ -2,7 +2,7 @@ import esmbody from "./esmbody-node.js";
 
 /**
  * @param {ImportMeta} importMeta
- * @param {function} function_
+ * @param {(...a: any) => any} function_
  * @returns {string}
  */
 function esmurl(importMeta, function_) {
