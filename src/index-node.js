@@ -1,4 +1,4 @@
-import esmbody from "#/esmbody.js";
+import esmbody from "./esmbody-node.js";
 
 /**
  * @param {ImportMeta} importMeta
@@ -7,11 +7,8 @@ import esmbody from "#/esmbody.js";
  */
 function esmurl(importMeta, function_) {
   const body = esmbody(importMeta, function_);
-  if (URL.createObjectURL) {
-    return URL.createObjectURL(new Blob([body], { type: "text/javascript" }));
-  } else {
-    return "data:text/javascript," + encodeURIComponent(body);
-  }
+  // https://github.com/nodejs/node/issues/46557
+  return "data:text/javascript," + encodeURIComponent(body);
 }
 
 export default esmurl;
