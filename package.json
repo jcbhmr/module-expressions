@@ -36,19 +36,27 @@
   },
   "scripts": {
     "build": "node prebuild.js",
-    "lint": "prettier --ignore-path .gitignore -w .",
-    "start": "node --test --watch test/*.test.js",
-    "test": "node prebuild.js && tsc --noEmit && node --test test/*.test.js"
+    "build:docs": "typedoc",
+    "lint": "prettier --ignore-path .gitignore -w . && tsc --noEmit",
+    "test": "node prebuild.js && node --test test/*.test.js",
+    "test:watch": "node --test --watch test/*.test.js"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
     "import-meta-resolve": "^3.0.0",
     "is-odd": "^3.0.1",
-    "jsdoc": "^4.0.2",
     "prettier": "^2.8.8",
     "prettier-plugin-jsdoc": "^0.4.2",
     "prettier-plugin-packagejson": "^2.4.3",
     "terser": "^5.17.4",
+    "typedoc": "^0.24.8",
     "typescript": "^5.0.4"
+  },
+  "typedocOptions": {
+    "entryPoints": [
+      "src/index.js"
+    ],
+    "out": "docs/dist",
+    "skipErrorChecking": true
   }
 }
