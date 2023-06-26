@@ -7,11 +7,15 @@
   "author": "",
   "type": "module",
   "imports": {
-    "#import-meta-url": {
-      "bun": "./dist/moduleTemplate.txt.js",
-      "deno": "./dist/moduleTemplate.txt.js",
-      "node": "./dist/moduleTemplate-node.txt.js",
-      "default": "./dist/moduleTemplate.txt.js"
+    "#/internal/createContentURL.js": {
+      "deno": "./src/internal/createContentURL.js",
+      "node": "./src/internal/createContentURL-node.js",
+      "default": "./src/internal/createContentURL.js"
+    },
+    "#/internal/getResolve.js": {
+      "deno": "./src/internal/getResolve.js",
+      "node": "./src/internal/getResolve-node.js",
+      "default": "./src/internal/getResolve.js"
     }
   },
   "exports": "./dist/index.js",
