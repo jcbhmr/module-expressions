@@ -1,5 +1,4 @@
-src/*.txt.ts
-src/*.txt.js
+/src/internal/template-*.txt.js
 
 #region https://github.com/github/gitignore/blob/main/Node.gitignore
 # Logs

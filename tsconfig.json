@@ -13,7 +13,7 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "#/esmbody.js": ["./src/esmbody-node.js"]
+      "#/esmbody.js": ["./src/esmbody.d.ts"]
     }
   },
   "include": ["src"],
