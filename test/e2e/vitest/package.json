@@ -1,0 +1,16 @@
+{
+  "name": "vitest",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "dependencies": {
+    "esmurl": "file:../../..",
+    "is-odd": "^3.0.1"
+  },
+  "devDependencies": {
+    "vitest": "^0.32.2"
+  }
+}
