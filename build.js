@@ -2,7 +2,10 @@
 import fsPromises from "node:fs/promises";
 import { minify } from "terser";
 
-for (const templateFile of ["src/internal/template-node.js"]) {
+for (const templateFile of [
+  "src/internal/template-node.js",
+  "src/internal/template.js",
+]) {
   const outFile = templateFile.replace(/\.js$/, ".txt.js");
   const templateText = await fsPromises.readFile(templateFile, "utf8");
 
@@ -12,7 +15,7 @@ for (const templateFile of ["src/internal/template-node.js"]) {
       ...[...templateText.matchAll(/\W(TEMPLATE_\w+)\W/g)].map((m) => m[1]),
     ]),
   ].sort();
-  console.debug("reserved: %O", reserved);
+  // console.debug("reserved: %O", reserved);
 
   const terserOptions = {
     module: true,
