@@ -2,27 +2,28 @@
 
 # Bound ESM URLs
 
-🎁 Create a self-contained ESM `blob:` URL using a function & local
-`import.meta`
+🎁 Create a self-contained ESM `blob:` URL from a function
 
 <div align="center">
 
-![](https://user-images.githubusercontent.com/61068799/248665651-7a5a82a9-e82e-4592-87b6-b3142952a951.png)
+![](https://i.imgur.com/ZvvtnCH.png)
 
 </div>
 
 ## Installation
 
 ```sh
-npm install @jcbhmr/esmurl
+npm install esmurl
 ```
 
-🛑 Currently only Node.js is supported. Check [#5] for more details.
+```js
+import esmurl from "https://esm.sh/esmurl";
+```
 
 ## Usage
 
 ```js
-import esmurl from "@jcbhmr/esmurl";
+import esmurl from "esmurl";
 
 const url = esmurl(import.meta, async () => {
   const url = await import("node:url");
@@ -39,5 +40,3 @@ const url = esmurl(import.meta, async () => {
 const m = await import(url);
 console.log("Return value is exposed as default export: %s", m.default);
 ```
-
-[#5]: https://github.com/jcbhmr/esmurl/issues/5
