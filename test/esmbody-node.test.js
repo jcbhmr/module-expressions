@@ -21,12 +21,14 @@ async function weval(b) {
     w.on("message", (data) => {
       w.terminate();
       resolve(data);
+      clearTimeout(id);
     });
     w.on("error", (e) => {
       w.terminate();
       reject(e);
+      clearTimeout(id);
     });
-    setTimeout(() => {
+    const id = setTimeout(() => {
       w.terminate();
       reject(new Error("timeout"));
     }, 1000);

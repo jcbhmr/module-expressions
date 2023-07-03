@@ -38,13 +38,17 @@
   "files": [
     "src"
   ],
+  "workspaces": [
+    "test/e2e/*"
+  ],
   "scripts": {
     "build": "node build.js",
     "lint": "prettier --ignore-path .gitignore -w . && tsc --noEmit",
     "pretest": "npm run build",
-    "test": "npm run test:node && npm run test:deno",
+    "test": "npm run test:node && npm run test:deno && npm run test:e2e",
     "test:browser": "serve",
     "test:deno": "deno test -A test/esmbody-deno.test.js",
+    "test:e2e": "",
     "test:node": "node --test test/esmbody-node.test.js"
   },
   "devDependencies": {

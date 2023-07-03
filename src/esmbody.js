@@ -14,8 +14,12 @@ export default function esmbody(importMeta, function_) {
   __originalResolveMap__.set(id, importMeta.resolve);
 
   let f = `${function_}`;
+  f = f.replaceAll(
+    /(\W)\w\(\(\)=>(import\(".*?"\)(?:\.then\(.*?\))?),\[.*?\]\)(\W)/g,
+    "$1$2$3"
+  );
   f = f.replaceAll(/(\W)import\(/g, "$1__import__(");
-  f = f.replace(/(\W)import\.meta(\W)/g, "$1__importMeta__$2");
+  f = f.replaceAll(/(\W)import\.meta(\W)/g, "$1__importMeta__$2");
 
   let t = template;
   t = t.replaceAll("TEMPLATE_MODULE_ID", JSON.stringify(id));

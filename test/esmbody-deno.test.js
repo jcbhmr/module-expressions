@@ -20,12 +20,14 @@ async function weval(b) {
     w.onmessage = ({ data }) => {
       w.terminate();
       resolve(data);
+      clearTimeout(id);
     };
     w.onerror = (e) => {
       w.terminate();
       reject(e);
+      clearTimeout(id);
     };
-    setTimeout(() => {
+    const id = setTimeout(() => {
       w.terminate();
       reject(new Error("timeout"));
     }, 1000);
