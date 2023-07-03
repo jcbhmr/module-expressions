@@ -1,5 +1,16 @@
 import template from "./internal/template-node.txt.js";
 
+/** @type {(s: string, p?: string) => string} */
+let resolve;
+if (import.meta.resolve && !import.meta.resolve("data:,").then) {
+  // @ts-ignore
+  resolve = import.meta.resolve;
+} else {
+  const { resolve: resolveShim } = await import("import-meta-resolve");
+  resolve = (specifier, parentURL = import.meta.url) =>
+    resolveShim(specifier, parentURL);
+}
+
 /**
  * @param {ImportMeta} importMeta
  * @param {(...a: any) => any} function_
@@ -7,10 +18,7 @@ import template from "./internal/template-node.txt.js";
  */
 export default function esmbody(importMeta, function_) {
   const id = Math.random().toString(36).slice(2, 6);
-  const resolveShimURL = new URL(
-    "internal/import-meta-resolve.js",
-    import.meta.url
-  );
+  const resolveShimURL = resolve("import-meta-resolve");
 
   // @ts-ignore
   globalThis.__originalResolveMap__ ??= new Map();

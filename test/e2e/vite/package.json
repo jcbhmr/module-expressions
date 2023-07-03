@@ -1,13 +1,12 @@
 {
-  "name": "vite-html",
+  "name": "vite",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite",
-    "preview": "vite preview",
-    "test": "vite"
+    "dev": "vite build -w",
+    "test": "node --test"
   },
   "dependencies": {
     "esmurl": "file:../../..",
