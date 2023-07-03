@@ -26,6 +26,10 @@ async function weval(b) {
       w.terminate();
       reject(e);
     });
+    setTimeout(() => {
+      w.terminate();
+      reject(new Error("timeout"));
+    }, 1000);
   });
 }
 

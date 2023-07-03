@@ -20,9 +20,8 @@
         postMessage(m.default);
       };
     `;
-    const w = new Worker("data:text/javascript," + encodeURIComponent(js), {
-      type: "module",
-    });
+    const u = URL.createObjectURL(new Blob([js], { type: "text/javascript" }));
+    const w = new Worker(u, { type: "module" });
     w.postMessage(b);
     return new Promise((resolve, reject) => {
       w.onmessage = ({ data }) => {
@@ -33,6 +32,10 @@
         w.terminate();
         reject(e);
       };
+      setTimeout(() => {
+        w.terminate();
+        reject(new Error("timeout"));
+      }, 1000);
     });
   }
 
@@ -62,11 +65,11 @@
 
   test("works with 'https:' imports", async () => {
     const b = esmbody(import.meta, async () => {
-      const nocode = await import("https://esm.sh/nocode@1");
-      return nocode;
+      const { default: isEven } = await import("https://esm.sh/is-even");
+      return isEven(42);
     });
     delete globalThis.__originalResolveMap__;
-    assert(await esval(b));
+    assert.equal(await esval(b), true);
   });
 
   test("works with relative imports", async () => {
@@ -96,10 +99,10 @@
 
   test("works in Worker threads with 'https:' imports", async () => {
     const b = esmbody(import.meta, async () => {
-      const nocode = await import("https://esm.sh/nocode@1");
-      return nocode;
+      const { default: isEven } = await import("https://esm.sh/is-even");
+      return isEven(42);
     });
-    assert(await weval(b));
+    assert.equal(await weval(b), true);
   });
 
   test("works in Worker threads with relative imports", async () => {

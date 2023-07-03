@@ -1,5 +1,5 @@
-import esmbody from "../src/esmbody.js";
 import assert from "node:assert";
+import esmbody from "../src/esmbody.js";
 
 async function esval(b) {
   const m = await import("data:text/javascript," + encodeURIComponent(b));
@@ -25,6 +25,10 @@ async function weval(b) {
       w.terminate();
       reject(e);
     };
+    setTimeout(() => {
+      w.terminate();
+      reject(new Error("timeout"));
+    }, 1000);
   });
 }
 
