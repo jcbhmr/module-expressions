@@ -1,7 +1,7 @@
 {
-  "name": "@jcbhmr/esmurl",
-  "version": "0.1.0",
-  "description": "🎁 Create a self-contained ESM blob: URL using a function & local import.meta",
+  "name": "esmurl",
+  "version": "0.2.0",
+  "description": "🎁 Create a self-contained ESM blob: URL from a function",
   "keywords": [
     "nodejs",
     "javascript",
@@ -11,25 +11,26 @@
     "js-functions",
     "importmaps"
   ],
+  "homepage": "https://github.com/togajam/esmurl#readme",
+  "bugs": "https://github.com/togajam/esmurl/issues",
+  "repository": "github:togajam/esmurl",
   "license": "MIT",
-  "author": "Jacob Hummer <jcbhmr@outlook.com> (https://jcbhmr.me/)",
+  "contributors": [
+    "Jacob Hummer <jcbhmr@outlook.com> (https://jcbhmr.me/)"
+  ],
   "type": "module",
-  "imports": {
-    "#/esmbody.js": {
-      "deno": null,
-      "bun": null,
-      "node": "./src/esmbody-node.js"
-    }
-  },
   "exports": {
     ".": {
+      "deno": "./src/index.js",
+      "bun": null,
       "node": "./src/index-node.js",
       "default": "./src/index.js"
     },
     "./esmbody.js": {
-      "deno": null,
+      "deno": "./src/esmbody.js",
       "bun": null,
-      "node": "./src/esmbody-node.js"
+      "node": "./src/esmbody-node.js",
+      "default": "./src/esmbody.js"
     },
     "./*.js": "./src/*.js",
     "./internal/*": null
@@ -38,16 +39,16 @@
     "src"
   ],
   "scripts": {
-    "build": "node prebuild.js",
-    "build:docs": "typedoc",
-    "docs:dev": "conc \"typedoc --watch\" \"serve docs/dist\"",
+    "build": "node build.js",
     "lint": "prettier --ignore-path .gitignore -w . && tsc --noEmit",
-    "test": "node prebuild.js && node --test test/*.test.js",
-    "test:watch": "node --test --watch test/*.test.js"
+    "pretest": "npm run build",
+    "test": "npm run test:node && npm run test:deno",
+    "test:browser": "serve",
+    "test:deno": "deno test -A test/esmbody-deno.test.js",
+    "test:node": "node --test test/esmbody-node.test.js"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
-    "concurrently": "^8.2.0",
     "import-meta-resolve": "^3.0.0",
     "is-odd": "^3.0.1",
     "prettier": "^2.8.8",
@@ -55,14 +56,6 @@
     "prettier-plugin-packagejson": "^2.4.3",
     "serve": "^14.2.0",
     "terser": "^5.17.4",
-    "typedoc": "^0.24.8",
     "typescript": "^5.0.4"
-  },
-  "typedocOptions": {
-    "entryPoints": [
-      "src/index.js"
-    ],
-    "out": "docs/dist",
-    "skipErrorChecking": true
   }
 }
