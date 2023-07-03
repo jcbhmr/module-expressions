@@ -12,6 +12,7 @@ const template = `
           : import.meta.resolve(specifier);
       });
 
+    // https://github.com/denoland/deno/issues/15826
     const moduleWrapper = (specifier) => {
       const b = \`
         import * as module from \${JSON.stringify(specifier)};
