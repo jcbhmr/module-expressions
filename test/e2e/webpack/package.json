@@ -1,19 +1,20 @@
 {
-  "name": "vite",
+  "name": "webpack",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite build -w",
+    "build": "webpack",
     "pretest": "npm run build",
-    "test": "node --test"
+    "test": "serve"
   },
   "dependencies": {
     "esmurl": "file:../../..",
     "is-odd": "^3.0.1"
   },
   "devDependencies": {
-    "vite": "^4.3.9"
+    "serve": "^14.2.0",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
   }
 }
