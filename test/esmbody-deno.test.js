@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import esmbody from "../src/esmbody.js";
+import esmbody from "../src/esmbody-deno.js";
 
 async function esval(b) {
   const m = await import("data:text/javascript," + encodeURIComponent(b));
@@ -12,9 +12,8 @@ async function weval(b) {
       postMessage(m.default);
     };
   `;
-  const w = new Worker("data:text/javascript," + encodeURIComponent(js), {
-    type: "module",
-  });
+  const u = URL.createObjectURL(new Blob([js], { type: "text/javascript" }));
+  const w = new Worker(u, { type: "module" });
   w.postMessage(b);
   return new Promise((resolve, reject) => {
     w.onmessage = ({ data }) => {
@@ -60,15 +59,14 @@ Deno.test("works with relative imports", async () => {
   assert.equal(await esval(b), 42);
 });
 
-// TODO: Fix this test
-// Deno.test("works with 'npm:' imports", async () => {
-//   const b = esmbody(import.meta, async () => {
-//     const { default: isOdd } = await import("npm:is-odd");
-//     return isOdd(42);
-//   });
-//   delete globalThis.__originalResolveMap__;
-//   assert.equal(await esval(b), false);
-// });
+Deno.test("works with 'npm:' imports", async () => {
+  const b = esmbody(import.meta, async () => {
+    const { default: isOdd } = await import("npm:is-odd");
+    return isOdd(42);
+  });
+  delete globalThis.__originalResolveMap__;
+  assert.equal(await esval(b), false);
+});
 
 Deno.test("works in Worker threads with no imports", async () => {
   const b = esmbody(import.meta, () => {
@@ -91,4 +89,12 @@ Deno.test("works in Worker threads with relative imports", async () => {
     return x;
   });
   assert.equal(await weval(b), 42);
+});
+
+Deno.test("works in Worker threads with 'npm:' imports", async () => {
+  const b = esmbody(import.meta, async () => {
+    const { default: isOdd } = await import("npm:is-odd");
+    return isOdd(42);
+  });
+  assert.equal(await weval(b), false);
 });

@@ -1,4 +1,4 @@
-import esmbody from "./esmbody.js";
+import esmbody from "./esmbody-deno.js";
 
 /**
  * @param {ImportMeta} importMeta

@@ -1,6 +1,6 @@
 {
   "name": "esmurl",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "🎁 Create a self-contained ESM blob: URL from a function",
   "keywords": [
     "nodejs",
@@ -21,13 +21,13 @@
   "type": "module",
   "exports": {
     ".": {
-      "deno": "./src/index.js",
+      "deno": "./src/index-deno.js",
       "bun": null,
       "node": "./src/index-node.js",
       "default": "./src/index.js"
     },
     "./esmbody.js": {
-      "deno": "./src/esmbody.js",
+      "deno": "./src/esmbody-deno.js",
       "bun": null,
       "node": "./src/esmbody-node.js",
       "default": "./src/esmbody.js"
@@ -42,16 +42,15 @@
     "test/e2e/*"
   ],
   "scripts": {
-    "build": "node build.js",
     "lint": "prettier --ignore-path .gitignore -w . && tsc --noEmit",
-    "pretest": "npm run build",
     "test": "npm run test:node && npm run test:deno",
     "test:browser": "serve",
-    "test:deno": "deno test -A test/esmbody-deno.test.js",
+    "test:deno": "cross-env DENO_NO_PACKAGE_JSON=1 deno test -A --node-modules-dir=false test/esmbody-deno.test.js",
     "test:node": "node --test test/esmbody-node.test.js"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
+    "cross-env": "^7.0.3",
     "import-meta-resolve": "^3.0.0",
     "is-odd": "^3.0.1",
     "prettier": "^2.8.8",
