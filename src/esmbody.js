@@ -1,4 +1,4 @@
-import template from "./internal/template-node.txt.js";
+import template from "./internal/template.txt.js";
 
 /**
  * @param {ImportMeta} importMeta
@@ -7,10 +7,6 @@ import template from "./internal/template-node.txt.js";
  */
 export default function esmbody(importMeta, function_) {
   const id = Math.random().toString(36).slice(2, 6);
-  const resolveShimURL = new URL(
-    "internal/import-meta-resolve.js",
-    import.meta.url
-  );
 
   // @ts-ignore
   globalThis.__originalResolveMap__ ??= new Map();
@@ -24,7 +20,6 @@ export default function esmbody(importMeta, function_) {
   let t = template;
   t = t.replaceAll("TEMPLATE_MODULE_ID", JSON.stringify(id));
   t = t.replaceAll("TEMPLATE_MODULE_URL", JSON.stringify(importMeta.url));
-  t = t.replaceAll("TEMPLATE_RESOLVE_SHIM_URL", JSON.stringify(resolveShimURL));
   t = t.replaceAll("TEMPLATE_FUNCTION_TEXT", f);
 
   return t;

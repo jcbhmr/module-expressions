@@ -5,11 +5,8 @@ import esmbody from "./esmbody-node.js";
  * @param {(...a: any) => any} function_
  * @returns {string}
  */
-function esmurl(importMeta, function_) {
+export default function esmurl(importMeta, function_) {
   const body = esmbody(importMeta, function_);
   // https://github.com/nodejs/node/issues/46557
   return "data:text/javascript," + encodeURIComponent(body);
 }
-
-export default esmurl;
-export { esmbody };

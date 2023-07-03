@@ -5,7 +5,7 @@
   const resolveShimURL = TEMPLATE_RESOLVE_SHIM_URL;
 
   let resolve;
-  if (globalThis.__originalResolversMap__?.has(moduleId)) {
+  if (globalThis.__originalResolversMap__?.get(moduleId)) {
     resolve = __originalResolversMap__.get(moduleId);
   } else if (import.meta.resolve && !import.meta.resolve("data:,").then) {
     resolve = (specifier, parentURL = moduleURL) =>
