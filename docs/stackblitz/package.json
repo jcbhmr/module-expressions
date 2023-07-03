@@ -1,8 +1,0 @@
-{
-  "scripts": {
-    "start": "node index.js && vite --clearScreen false"
-  },
-  "dependencies": {
-    "@jcbhmr/esmurl": "~0.1.0"
-  }
-}
