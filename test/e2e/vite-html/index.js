@@ -11,7 +11,7 @@ async function main() {
     return 42;
   });
 
-  const m = await import(url);
+  const m = await import(/* @vite-ignore */ url);
   console.log("Return value is exposed as default export: %s", m.default);
 }
 main();
