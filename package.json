@@ -48,9 +48,6 @@
     "test:deno": "cross-env DENO_NO_PACKAGE_JSON=1 deno test -A --node-modules-dir=false test/esmbody-deno.test.js",
     "test:node": "node --test test/esmbody-node.test.js"
   },
-  "dependencies": {
-    "import-meta-resolve": "^3.0.0"
-  },
   "devDependencies": {
     "@types/node": "^20.2.5",
     "cross-env": "^7.0.3",

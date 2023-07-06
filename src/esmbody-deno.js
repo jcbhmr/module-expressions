@@ -1,40 +1,40 @@
-const template = `
-  {
-    const moduleId = TEMPLATE_MODULE_ID;
-    const moduleURL = TEMPLATE_MODULE_URL;
+const moduleCodeTemplate = `
+{
+  const moduleId = TEMPLATE_MODULE_ID;
+  const moduleURL = TEMPLATE_MODULE_URL;
 
-    const resolve =
-      globalThis.__originalResolversMap__?.get(moduleId) ??
-      ((specifier) => {
-        specifier = \`\${specifier}\`;
-        return /^\\.?\\.?\\//.test(specifier)
-          ? import.meta.resolve(new URL(specifier, moduleURL).href)
-          : import.meta.resolve(specifier);
-      });
-
-    // https://github.com/denoland/deno/issues/15826
-    const moduleWrapper = (specifier) => {
-      const b = \`
-        import * as module from \${JSON.stringify(specifier)};
-        export const then = (f) => f(module);
-      \`
-      return URL.createObjectURL(new Blob([b], { type: "text/javascript" }));
-    }
-
-    var __import__ = async (specifier, options = undefined) => {
+  const resolve =
+    globalThis.__originalResolversMap__?.get(moduleId) ??
+    ((specifier) => {
       specifier = \`\${specifier}\`;
       return /^\\.?\\.?\\//.test(specifier)
-        ? import(moduleWrapper(new URL(specifier, moduleURL).href), options)
-        : import(moduleWrapper(specifier), options);
-    };
+        ? import.meta.resolve(new URL(specifier, moduleURL).href)
+        : import.meta.resolve(specifier);
+    });
 
-    var __importMeta__ = Object.create(null);
-    __importMeta__.url = moduleURL;
-    __importMeta__.resolve = resolve;
+  // https://github.com/denoland/deno/issues/15826
+  const moduleWrapper = (specifier) => {
+    const b = \`
+      import * as module from \${JSON.stringify(specifier)};
+      export const then = (f) => f(module);
+    \`
+    return URL.createObjectURL(new Blob([b], { type: "text/javascript" }));
   }
 
-  const __function__ = TEMPLATE_FUNCTION_TEXT;
-  export default await __function__();
+  var __import__ = async (specifier, options = undefined) => {
+    specifier = \`\${specifier}\`;
+    return /^\\.?\\.?\\//.test(specifier)
+      ? import(moduleWrapper(new URL(specifier, moduleURL).href), options)
+      : import(moduleWrapper(specifier), options);
+  };
+
+  var __importMeta__ = Object.create(null);
+  __importMeta__.url = moduleURL;
+  __importMeta__.resolve = resolve;
+}
+
+const __function__ = TEMPLATE_FUNCTION_TEXT;
+export default await __function__();
 `;
 
 /**
@@ -58,7 +58,7 @@ export default function esmbody(importMeta, function_) {
   f = f.replaceAll(/(\W)import\(/g, "$1__import__(");
   f = f.replaceAll(/(\W)import\.meta(\W)/g, "$1__importMeta__$2");
 
-  let t = template;
+  let t = moduleCodeTemplate;
   t = t.replaceAll("TEMPLATE_MODULE_ID", JSON.stringify(id));
   t = t.replaceAll("TEMPLATE_MODULE_URL", JSON.stringify(importMeta.url));
   t = t.replaceAll("TEMPLATE_FUNCTION_TEXT", f);

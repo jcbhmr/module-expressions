@@ -1,31 +1,31 @@
-const template = `
-  {
-    const moduleId = TEMPLATE_MODULE_ID;
-    const moduleURL = TEMPLATE_MODULE_URL;
+const moduleCodeTemplate = `
+{
+  const moduleId = TEMPLATE_MODULE_ID;
+  const moduleURL = TEMPLATE_MODULE_URL;
 
-    const resolve =
-      globalThis.__originalResolversMap__?.get(moduleId) ??
-      ((specifier) => {
-        specifier = \`\${specifier}\`;
-        return /^\\.?\\.?\\//.test(specifier)
-          ? import.meta.resolve(new URL(specifier, moduleURL).href)
-          : import.meta.resolve(specifier);
-      });
-
-    var __import__ = async (specifier, options = undefined) => {
+  const resolve =
+    globalThis.__originalResolversMap__?.get(moduleId) ??
+    ((specifier) => {
       specifier = \`\${specifier}\`;
       return /^\\.?\\.?\\//.test(specifier)
-        ? import(new URL(specifier, moduleURL).href, options)
-        : import(specifier, options);
-    };
+        ? import.meta.resolve(new URL(specifier, moduleURL).href)
+        : import.meta.resolve(specifier);
+    });
 
-    var __importMeta__ = Object.create(null);
-    __importMeta__.url = moduleURL;
-    __importMeta__.resolve = resolve;
-  }
+  var __import__ = async (specifier, options = undefined) => {
+    specifier = \`\${specifier}\`;
+    return /^\\.?\\.?\\//.test(specifier)
+      ? import(new URL(specifier, moduleURL).href, options)
+      : import(specifier, options);
+  };
 
-  const __function__ = TEMPLATE_FUNCTION_TEXT;
-  export default await __function__();
+  var __importMeta__ = Object.create(null);
+  __importMeta__.url = moduleURL;
+  __importMeta__.resolve = resolve;
+}
+
+const __function__ = TEMPLATE_FUNCTION_TEXT;
+export default await __function__();
 `;
 
 /**
@@ -49,7 +49,7 @@ export default function esmbody(importMeta, function_) {
   f = f.replaceAll(/(\W)import\(/g, "$1__import__(");
   f = f.replaceAll(/(\W)import\.meta(\W)/g, "$1__importMeta__$2");
 
-  let t = template;
+  let t = moduleCodeTemplate;
   t = t.replaceAll("TEMPLATE_MODULE_ID", JSON.stringify(id));
   t = t.replaceAll("TEMPLATE_MODULE_URL", JSON.stringify(importMeta.url));
   t = t.replaceAll("TEMPLATE_FUNCTION_TEXT", f);
