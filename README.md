@@ -1,5 +1,3 @@
-![🚧 Under construction 👷‍♂️](https://i.imgur.com/LEP2R3N.png)
-
 # Bound ESM URLs
 
 🎁 Create a self-contained ESM `blob:` URL from a function
